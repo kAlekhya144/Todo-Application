@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-database-deployment
+  namespace: db-ns 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-database
+  template:
+    metadata:
+      labels:
+        app: todo-database
+    spec:
+      containers:
+      - name: todo-database
+        image: mongo:6
+        ports:
+        - containerPort: 27017          
+ #MongoDB default port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-database
+  namespace: db-ns
+spec:
+  type: ClusterIP
+  selector:
+    app: todo-database
+  ports:
+  - port: 27017 
+    targetPort: 27017
+    protocol: TCP   
